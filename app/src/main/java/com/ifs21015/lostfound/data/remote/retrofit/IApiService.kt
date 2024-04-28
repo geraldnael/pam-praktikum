@@ -1,9 +1,9 @@
 package com.ifs21015.lostfound.data.remote.retrofit
 
+import com.ifs21015.lostandfound.data.remote.response.DelcomLostFoundsResponse
 import com.ifs21015.lostfound.data.remote.response.DelcomAddLostFoundResponse
 import com.ifs21015.lostfound.data.remote.response.DelcomLoginResponse
 import com.ifs21015.lostfound.data.remote.response.DelcomLostFoundResponse
-import com.ifs21015.lostfound.data.remote.response.DelcomLostFoundsResponse
 import com.ifs21015.lostfound.data.remote.response.DelcomResponse
 import com.ifs21015.lostfound.data.remote.response.DelcomUserResponse
 import retrofit2.http.DELETE
@@ -53,7 +53,7 @@ interface IApiService {
     ): DelcomResponse
 
     @GET("lost-founds")
-    suspend fun getAll(
+    suspend fun getLostFounds(
         @Query("is_completed") isCompleted: Int?,
         @Query("is_me") isMe: Int?,
         @Query("status") status: String?,
@@ -62,6 +62,11 @@ interface IApiService {
     @GET("lost-founds/{id}")
     suspend fun getDetail(
         @Path("id") lostFoundId: Int,
+    ): DelcomLostFoundResponse
+
+    @GET("lost-founds/{id}")
+    suspend fun getLostFound(
+        @Path("id") lostfoundId: Int
     ): DelcomLostFoundResponse
 
     @DELETE("lost-founds/{id}")

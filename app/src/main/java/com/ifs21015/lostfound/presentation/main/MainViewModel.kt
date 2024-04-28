@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.ifs21015.lostandfound.data.remote.response.DelcomLostFoundsResponse
 import com.ifs21015.lostfound.data.pref.UserModel
 import com.ifs21015.lostfound.data.remote.MyResult
-import com.ifs21015.lostfound.data.remote.response.DelcomLostFoundsResponse
 import com.ifs21015.lostfound.data.remote.response.DelcomResponse
 import com.ifs21015.lostfound.data.repository.AuthRepository
 import com.ifs21015.lostfound.data.repository.LostFoundRepository
@@ -29,8 +29,12 @@ class MainViewModel(
         }
     }
 
-    fun getTodos(): LiveData<MyResult<DelcomLostFoundsResponse>> {
-        return lostFoundRepository.getAll(null, 0, null).asLiveData()
+    fun getLostFound(): LiveData<MyResult<DelcomLostFoundsResponse>> {
+        return lostFoundRepository.getLostFounds(null, 1, null).asLiveData()
+    }
+
+    fun getLostFounds(): LiveData<MyResult<DelcomLostFoundsResponse>> {
+        return lostFoundRepository.getLostFounds(null,0,null).asLiveData()
     }
 
     fun putTodo(

@@ -3,27 +3,29 @@ package com.ifs21015.lostfound.presentation.lostfound
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import com.ifs21015.lostfound.data.local.entity.DelcomLostFoundEntity
 import com.ifs21015.lostfound.data.remote.MyResult
 import com.ifs21015.lostfound.data.remote.response.DataAddLostFoundResponse
 import com.ifs21015.lostfound.data.remote.response.DelcomLostFoundResponse
 import com.ifs21015.lostfound.data.remote.response.DelcomResponse
+import com.ifs21015.lostfound.data.repository.LocalLostFoundRepository
 import com.ifs21015.lostfound.data.repository.LostFoundRepository
 import com.ifs21015.lostfound.presentation.ViewModelFactory
-
-class LostFoundViewModel (
-    private val lostFoundRepository : LostFoundRepository
+class LostFoundViewModel(
+    private val lostfoundRepository: LostFoundRepository,
+    private val localLostFoundRepository: LocalLostFoundRepository
 ) : ViewModel() {
 
-    fun getLostFound(lostfoundId: Int) : LiveData<MyResult<DelcomLostFoundResponse>> {
-        return lostFoundRepository.getDetail(lostfoundId).asLiveData()
+    fun getLostFound(lostfoundId: Int): LiveData<MyResult<DelcomLostFoundResponse>>{
+        return lostfoundRepository.getLostFound(lostfoundId).asLiveData()
     }
 
     fun postLostFound(
         title: String,
-        description : String,
-        status: String,
-    ) : LiveData<MyResult<DataAddLostFoundResponse>> {
-        return lostFoundRepository.postLostFound(
+        description: String,
+        status: String
+    ): LiveData<MyResult<DataAddLostFoundResponse>>{
+        return lostfoundRepository.postLostFound(
             title,
             description,
             status
@@ -36,29 +38,45 @@ class LostFoundViewModel (
         description: String,
         status: String,
         isCompleted: Boolean,
-    ) : LiveData<MyResult<DelcomResponse>> {
-        return lostFoundRepository.putLostFound(
+    ): LiveData<MyResult<DelcomResponse>> {
+        return lostfoundRepository.putLostFound(
             lostfoundId,
             title,
             description,
             status,
-            isCompleted
+            isCompleted,
         ).asLiveData()
     }
 
-    fun delete(lostfoundId: Int) : LiveData<MyResult<DelcomResponse>> {
-        return lostFoundRepository.delete(lostfoundId).asLiveData()
+    fun deleteLostFound(lostfoundId: Int): LiveData<MyResult<DelcomResponse>> {
+        return lostfoundRepository.deleteLostFound(lostfoundId).asLiveData()
+    }
+
+    fun getLocalLostFounds(): LiveData<List<DelcomLostFoundEntity>?> {
+        return localLostFoundRepository.getAllLostFounds()
+    }
+
+    fun getLocalLostFound(lostfoundId: Int): LiveData<DelcomLostFoundEntity?> {
+        return localLostFoundRepository.get(lostfoundId)
+    }
+    fun insertLocalLostFound(lostfound: DelcomLostFoundEntity) {
+        localLostFoundRepository.insert(lostfound)
+    }
+    fun deleteLocalLostFound(lostfound: DelcomLostFoundEntity) {
+        localLostFoundRepository.delete(lostfound)
     }
 
     companion object {
         @Volatile
         private var INSTANCE: LostFoundViewModel? = null
-        fun getInstance (
-            lostFoundRepository: LostFoundRepository
-        ) : LostFoundViewModel {
+        fun getInstance(
+            lostfoundRepository: LostFoundRepository,
+            localLostFoundRepository: LocalLostFoundRepository,
+        ): LostFoundViewModel {
             synchronized(ViewModelFactory::class.java) {
                 INSTANCE = LostFoundViewModel(
-                    lostFoundRepository
+                    lostfoundRepository,
+                    localLostFoundRepository
                 )
             }
             return INSTANCE as LostFoundViewModel

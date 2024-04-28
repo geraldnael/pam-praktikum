@@ -70,7 +70,31 @@ class LostFoundRepository private constructor(
         }
     }
 
-    fun getAll(
+    fun getLostFound(
+        lostfoundId: Int,
+    ) = flow {
+        emit(MyResult.Loading)
+        try {
+            //get success message
+            emit(
+                MyResult.Success(
+                    apiService.getLostFound(lostfoundId)
+                )
+            )
+        } catch (e: HttpException) {
+            //get error message
+            val jsonInString = e.response()?.errorBody()?.string()
+            emit(
+                MyResult.Error(
+                    Gson()
+                        .fromJson(jsonInString, DelcomResponse::class.java)
+                        .message
+                )
+            )
+        }
+    }
+
+    fun getLostFounds(
         isCompleted: Int?,
         isMe: Int?,
         status: String?,
@@ -78,7 +102,11 @@ class LostFoundRepository private constructor(
         emit(MyResult.Loading)
         try {
             //get success message
-            emit(MyResult.Success(apiService.getAll(isCompleted, isMe, status)))
+            emit(
+                MyResult.Success(
+                    apiService.getLostFounds(isCompleted, isMe, status)
+                )
+            )
         } catch (e: HttpException) {
             //get error message
             val jsonInString = e.response()?.errorBody()?.string()
@@ -92,27 +120,8 @@ class LostFoundRepository private constructor(
         }
     }
 
-    fun getDetail(
-        lostFoundId: Int,
-    ) = flow {
-        emit(MyResult.Loading)
-        try {
-            //get success message
-            emit(MyResult.Success(apiService.getDetail(lostFoundId)))
-        } catch (e: HttpException) {
-            //get error message
-            val jsonInString = e.response()?.errorBody()?.string()
-            emit(
-                MyResult.Error(
-                    Gson()
-                        .fromJson(jsonInString, DelcomResponse::class.java)
-                        .message
-                )
-            )
-        }
-    }
 
-    fun delete(
+    fun deleteLostFound(
         lostFoundId: Int,
     ) = flow {
         emit(MyResult.Loading)

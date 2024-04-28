@@ -28,6 +28,9 @@ data class LostFoundResponse(
 	@field:SerializedName("updated_at")
 	val updatedAt: String,
 
+	@field:SerializedName("user_id")
+	val userId: Int,
+
 	@field:SerializedName("description")
 	val description: String,
 
@@ -45,4 +48,6 @@ data class LostFoundResponse(
 
 	@field:SerializedName("is_completed")
 	var isCompleted: Int
+
+
 )
